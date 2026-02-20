@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Development System - Module Pages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Main container */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Hamburger Menu Button - Mobile */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1c2c 0%, #2d3748 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #a0c0ff;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Navigation tabs */
+        .nav-tabs {
+            padding: 20px 0;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-tab.active {
+            background: rgba(160, 192, 255, 0.2);
+            border-left-color: #a0c0ff;
+        }
+
+        .nav-tab i {
+            width: 30px;
+            font-size: 1.2rem;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header */
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-details h3 {
+            color: #2d3748;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .profile-details p {
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Page Container */
+        .page-container {
+            flex: 1;
+            padding: 30px;
+            background: #f7fafc;
+        }
+
+        /* Module Pages - Hidden by default, shown when active */
+        .module-page {
+            display: none;
+        }
+
+        .module-page.active {
+            display: block;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .page-title h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #718096;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f5ff;
+        }
+
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-danger:hover {
+            background: #f56565;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .stat-content h3 {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+
+        .stat-number {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Simple Chart Bars */
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 200px;
+            padding: 20px 0;
+        }
+
+        .chart-bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px 8px 0 0;
+            transition: height 0.3s;
+            min-height: 40px;
+        }
+
+        .bar-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .item-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .item-meta {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .item-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 15px 0;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .rating-value {
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .item-comment {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+
+        /* Form Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #2d3748;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Rating Selector */
+        .rating-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-option {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .rating-option:hover {
+            border-color: #667eea;
+            background: #f0f5ff;
+        }
+
+        .rating-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 800px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .profile-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .page-actions {
+                width: 100%;
+            }
+
+            .btn-primary, .btn-secondary {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle Button -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Personal Development</h2>
+                <p><i class="fas fa-database"></i> MySQL Edition</p>
+            </div>
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-module="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-tab" data-module="movies">
+                    <i class="fas fa-film"></i>
+                    <span>Movie Experience</span>
+                </div>
+                <div class="nav-tab" data-module="books">
+                    <i class="fas fa-book"></i>
+                    <span>Book Experience</span>
+                </div>
+                <div class="nav-tab" data-module="travel">
+                    <i class="fas fa-globe"></i>
+                    <span>Travel Experience</span>
+                </div>
+                <div class="nav-tab" data-module="music">
+                    <i class="fas fa-music"></i>
+                    <span>Music Experience</span>
+                </div>
+                <div class="nav-tab" data-module="fitness">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Fitness Experience</span>
+                </div>
+                <div class="nav-tab" data-module="learning">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Learning Experience</span>
+                </div>
+                <div class="nav-tab" data-module="goals">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Goals & Progress</span>
+                </div>
+                <div class="nav-tab" data-module="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </div>
+                <div class="nav-tab" data-module="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Fixed Header -->
+            <div class="fixed-header">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-details">
+                            <h3>John Developer</h3>
+                            <p>
+                                <i class="fas fa-envelope"></i> john@example.com
+                            </p>
+                            <p>
+                                <i class="fas fa-calendar"></i> Member since Jan 2024
+                            </p>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Movies</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Books</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Travels</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8.4</div>
+                            <div class="stat-label">Avg Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Container - Different modules appear here -->
+            <div class="page-container">
+                <!-- DASHBOARD MODULE (Default) -->
+                <div id="dashboard-module" class="module-page active">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>Dashboard</h1>
+                            <p>Welcome back! Here's your overview</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Total Movies</h3>
+                                <div class="stat-number">47</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Total Books</h3>
+                                <div class="stat-number">23</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Travel Experiences</h3>
+                                <div class="stat-number">12</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Average Rating</h3>
+                                <div class="stat-number">8.4</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Activity Overview (Last 6 Months)</div>
+                        <div class="chart-bars">
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 60px"></div>
+                                <div class="bar-label">Jan</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 80px"></div>
+                                <div class="bar-label">Feb</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 45px"></div>
+                                <div class="bar-label">Mar</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 95px"></div>
+                                <div class="bar-label">Apr</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 70px"></div>
+                                <div class="bar-label">May</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 85px"></div>
+                                <div class="bar-label">Jun</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOVIE EXPERIENCE MODULE -->
+                <div id="movies-module" class="module-page">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1><i class="fas fa-film"></i> Movie Experience</h1>
+                            <p>Manage and rate your movie collection</p>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn-primary" onclick="openModal('movieModal')">
+                                <i class="fas fa-plus"></i> Add Movie
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-chart-bar"></i> Statistics
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Movie Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Total Movies</h3>
+                                <div class="stat-number">47</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Average Rating</h3>
+                                <div class="stat-number">8.2</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>This Year</h3>
+                                <div class="stat-number">12</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Last 30 Days</h3>
+                                <div class="stat-number">3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Movie Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Movie Ratings Distribution</div>
+                        <div class="chart-bars">
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 40px"></div>
+                                <div class="bar-label">1-2</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 60px"></div>
+                                <div class="bar-label">3-4</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 85px"></div>
+                                <div class="bar-label">5-6</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 120px"></div>
+                                <div class="bar-label">7-8</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 95px"></div>
+                                <div class="bar-label">9-10</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Movie List -->
+                    <div class="items-grid" id="movieList">
+                        <!-- Movie items will be added here dynamically -->
+                    </div>
+                </div>
+
+                <!-- BOOK EXPERIENCE MODULE -->
+                <div id="books-module" class="module-page">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1><i class="fas fa-book"></i> Book Experience</h1>
+                            <p>Track your reading journey</p>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn-primary" onclick="openModal('bookModal')">
+                                <i class="fas fa-plus"></i> Add Book
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-chart-bar"></i> Statistics
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Book Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Total Books</h3>
+                                <div class="stat-number">23</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Average Rating</h3>
+                                <div class="stat-number">8.7</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book-reader"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Currently Reading</h3>
+                                <div class="stat-number">3</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Pages Read</h3>
+                                <div class="stat-number">1,247</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Reading Progress by Genre</div>
+                        <div class="chart-bars">
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 95px"></div>
+                                <div class="bar-label">Fiction</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 120px"></div>
+                                <div class="bar-label">Non-fiction</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 70px"></div>
+                                <div class="bar-label">Sci-Fi</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 85px"></div>
+                                <div class="bar-label">Biography</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 60px"></div>
+                                <div class="bar-label">Self-help</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book List -->
+                    <div class="items-grid" id="bookList">
+                        <!-- Book items will be added here dynamically -->
+                    </div>
+                </div>
+
+                <!-- TRAVEL EXPERIENCE MODULE -->
+                <div id="travel-module" class="module-page">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1><i class="fas fa-globe"></i> Travel Experience</h1>
+                            <p>Document your adventures</p>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn-primary" onclick="openModal('travelModal')">
+                                <i class="fas fa-plus"></i> Add Trip
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-map"></i> Map View
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Travel Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Countries Visited</h3>
+                                <div class="stat-number">12</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-city"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Cities</h3>
+                                <div class="stat-number">23</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Avg Experience</h3>
+                                <div class="stat-number">9.1</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Days Traveled</h3>
+                                <div class="stat-number">87</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Travel Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">Travels by Continent</div>
+                        <div class="chart-bars">
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 85px"></div>
+                                <div class="bar-label">Europe</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 60px"></div>
+                                <div class="bar-label">Asia</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 45px"></div>
+                                <div class="bar-label">Americas</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 30px"></div>
+                                <div class="bar-label">Africa</div>
+                            </div>
+                            <div class="chart-bar-item">
+                                <div class="bar" style="height: 20px"></div>
+                                <div class="bar-label">Oceania</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Travel List -->
+                    <div class="items-grid" id="travelList">
+                        <!-- Travel items will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD MOVIE MODAL -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Movie</h2>
+                <button class="modal-close" onclick="closeModal('movieModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="movieForm" onsubmit="addMovie(event)">
+                <div class="form-group">
+                    <label>Movie Title</label>
+                    <input type="text" class="form-control" id="movieTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Director</label>
+                    <input type="text" class="form-control" id="movieDirector" required>
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="number" class="form-control" id="movieYear" min="1900" max="2024" required>
+                </div>
+                <div class="form-group">
+                    <label>Rating (1-10)</label>
+                    <div class="rating-selector" id="movieRating">
+                        <!-- Rating buttons will be generated by JavaScript -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Your Review</label>
+                    <textarea class="form-control" id="movieReview" placeholder="What did you think?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select class="form-control" id="movieGenre">
+                        <option>Action</option>
+                        <option>Drama</option>
+                        <option>Comedy</option>
+                        <option>Sci-Fi</option>
+                        <option>Horror</option>
+                        <option>Romance</option>
+                        <option>Documentary</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Movie</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD BOOK MODAL -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Book</h2>
+                <button class="modal-close" onclick="closeModal('bookModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="bookForm" onsubmit="addBook(event)">
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input type="text" class="form-control" id="bookTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" class="form-control" id="bookAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label>Year Published</label>
+                    <input type="number" class="form-control" id="bookYear" min="1900" max="2024" required>
+                </div>
+                <div class="form-group">
+                    <label>Rating (1-10)</label>
+                    <div class="rating-selector" id="bookRating">
+                        <!-- Rating buttons will be generated -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Your Review</label>
+                    <textarea class="form-control" id="bookReview" placeholder="What did you think?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select class="form-control" id="bookGenre">
+                        <option>Fiction</option>
+                        <option>Non-fiction</option>
+                        <option>Science Fiction</option>
+                        <option>Biography</option>
+                        <option>Self-help</option>
+                        <option>History</option>
+                        <option>Fantasy</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Book</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD TRAVEL MODAL -->
+    <div class="modal" id="travelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Trip</h2>
+                <button class="modal-close" onclick="closeModal('travelModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="travelForm" onsubmit="addTravel(event)">
+                <div class="form-group">
+                    <label>Destination</label>
+                    <input type="text" class="form-control" id="travelDestination" required>
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" class="form-control" id="travelCountry" required>
+                </div>
+                <div class="form-group">
+                    <label>Year Visited</label>
+                    <input type="number" class="form-control" id="travelYear" min="1900" max="2024" required>
+                </div>
+                <div class="form-group">
+                    <label>Rating (1-10)</label>
+                    <div class="rating-selector" id="travelRating">
+                        <!-- Rating buttons will be generated -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Your Experience</label>
+                    <textarea class="form-control" id="travelExperience" placeholder="Describe your trip..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Duration (days)</label>
+                    <input type="number" class="form-control" id="travelDuration" min="1" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Trip</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data arrays
+        let movies = [
+            { id: 1, title: 'The Shawshank Redemption', director: 'Frank Darabont', year: 1994, rating: 9, review: 'Amazing movie!', genre: 'Drama' },
+            { id: 2, title: 'Inception', director: 'Christopher Nolan', year: 2010, rating: 8, review: 'Mind-bending!', genre: 'Sci-Fi' },
+            { id: 3, title: 'The Dark Knight', director: 'Christopher Nolan', year: 2008, rating: 9, review: 'Best Batman movie', genre: 'Action' }
+        ];
+
+        let books = [
+            { id: 1, title: 'Atomic Habits', author: 'James Clear', year: 2018, rating: 9, review: 'Life-changing', genre: 'Self-help' },
+            { id: 2, title: '1984', author: 'George Orwell', year: 1949, rating: 8, review: 'Scary accurate', genre: 'Fiction' }
+        ];
+
+        let travels = [
+            { id: 1, destination: 'Paris', country: 'France', year: 2023, rating: 9, experience: 'Beautiful city!', duration: 7 },
+            { id: 2, destination: 'Tokyo', country: 'Japan', year: 2023, rating: 10, experience: 'Amazing culture', duration: 10 }
+        ];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate rating buttons for modals
+            generateRatingButtons('movieRating');
+            generateRatingButtons('bookRating');
+            generateRatingButtons('travelRating');
+            
+            // Load initial data
+            renderMovies();
+            renderBooks();
+            renderTravels();
+            
+            // Setup mobile menu
+            setupMobileMenu();
+            
+            // Setup navigation
+            setupNavigation();
+        });
+
+        // Generate rating buttons (1-10)
+        function generateRatingButtons(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            for (let i = 1; i <= 10; i++) {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'rating-option';
+                button.textContent = i;
+                button.onclick = function() {
+                    // Remove selected class from all buttons in this container
+                    container.querySelectorAll('.rating-option').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    // Add selected class to clicked button
+                    this.classList.add('selected');
+                };
+                container.appendChild(button);
+            }
+        }
+
+        // Get selected rating from a rating selector
+        function getSelectedRating(containerId) {
+            const selected = document.querySelector(`#${containerId} .rating-option.selected`);
+            return selected ? parseInt(selected.textContent) : null;
+        }
+
+        // Add Movie
+        function addMovie(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('movieTitle').value;
+            const director = document.getElementById('movieDirector').value;
+            const year = parseInt(document.getElementById('movieYear').value);
+            const rating = getSelectedRating('movieRating');
+            const review = document.getElementById('movieReview').value;
+            const genre = document.getElementById('movieGenre').value;
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            const newMovie = {
+                id: movies.length + 1,
+                title,
+                director,
+                year,
+                rating,
+                review,
+                genre
+            };
+
+            movies.push(newMovie);
+            renderMovies();
+            closeModal('movieModal');
+            event.target.reset();
+        }
+
+        // Add Book
+        function addBook(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('bookTitle').value;
+            const author = document.getElementById('bookAuthor').value;
+            const year = parseInt(document.getElementById('bookYear').value);
+            const rating = getSelectedRating('bookRating');
+            const review = document.getElementById('bookReview').value;
+            const genre = document.getElementById('bookGenre').value;
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            const newBook = {
+                id: books.length + 1,
+                title,
+                author,
+                year,
+                rating,
+                review,
+                genre
+            };
+
+            books.push(newBook);
+            renderBooks();
+            closeModal('bookModal');
+            event.target.reset();
+        }
+
+        // Add Travel
+        function addTravel(event) {
+            event.preventDefault();
+            
+            const destination = document.getElementById('travelDestination').value;
+            const country = document.getElementById('travelCountry').value;
+            const year = parseInt(document.getElementById('travelYear').value);
+            const rating = getSelectedRating('travelRating');
+            const experience = document.getElementById('travelExperience').value;
+            const duration = parseInt(document.getElementById('travelDuration').value);
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            const newTravel = {
+                id: travels.length + 1,
+                destination,
+                country,
+                year,
+                rating,
+                experience,
+                duration
+            };
+
+            travels.push(newTravel);
+            renderTravels();
+            closeModal('travelModal');
+            event.target.reset();
+        }
+
+        // Render Movies
+        function renderMovies() {
+            const container = document.getElementById('movieList');
+            if (!container) return;
+
+            container.innerHTML = movies.map(movie => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <span class="item-title">${movie.title}</span>
+                        <button class="btn-danger" onclick="deleteMovie(${movie.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="item-meta">
+                        ${movie.director} • ${movie.year} • ${movie.genre}
+                    </div>
+                    <div class="item-rating">
+                        <div class="stars">
+                            ${'★'.repeat(Math.floor(movie.rating/2))}${'☆'.repeat(5-Math.floor(movie.rating/2))}
+                        </div>
+                        <span class="rating-value">${movie.rating}/10</span>
+                    </div>
+                    ${movie.review ? `<div class="item-comment">"${movie.review}"</div>` : ''}
+                    <div class="item-footer">
+                        <button class="btn-secondary" style="padding: 5px 10px;" onclick="editMovie(${movie.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Books
+        function renderBooks() {
+            const container = document.getElementById('bookList');
+            if (!container) return;
+
+            container.innerHTML = books.map(book => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <span class="item-title">${book.title}</span>
+                        <button class="btn-danger" onclick="deleteBook(${book.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="item-meta">
+                        ${book.author} • ${book.year} • ${book.genre}
+                    </div>
+                    <div class="item-rating">
+                        <div class="stars">
+                            ${'★'.repeat(Math.floor(book.rating/2))}${'☆'.repeat(5-Math.floor(book.rating/2))}
+                        </div>
+                        <span class="rating-value">${book.rating}/10</span>
+                    </div>
+                    ${book.review ? `<div class="item-comment">"${book.review}"</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Render Travels
+        function renderTravels() {
+            const container = document.getElementById('travelList');
+            if (!container) return;
+
+            container.innerHTML = travels.map(travel => `
+                <div class="item-card">
+                    <div class="item-header">
+                        <span class="item-title">${travel.destination}, ${travel.country}</span>
+                        <button class="btn-danger" onclick="deleteTravel(${travel.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="item-meta">
+                        ${travel.year} • ${travel.duration} days
+                    </div>
+                    <div class="item-rating">
+                        <div class="stars">
+                            ${'★'.repeat(Math.floor(travel.rating/2))}${'☆'.repeat(5-Math.floor(travel.rating/2))}
+                        </div>
+                        <span class="rating-value">${travel.rating}/10</span>
+                    </div>
+                    ${travel.experience ? `<div class="item-comment">"${travel.experience}"</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Delete functions
+        function deleteMovie(id) {
+            if (confirm('Are you sure you want to delete this movie?')) {
+                movies = movies.filter(m => m.id !== id);
+                renderMovies();
+            }
+        }
+
+        function deleteBook(id) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                books = books.filter(b => b.id !== id);
+                renderBooks();
+            }
+        }
+
+        function deleteTravel(id) {
+            if (confirm('Are you sure you want to delete this travel experience?')) {
+                travels = travels.filter(t => t.id !== id);
+                renderTravels();
+            }
+        }
+
+        // Edit functions (placeholder - you can implement full edit functionality)
+        function editMovie(id) {
+            alert('Edit functionality coming soon!');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Mobile menu setup
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('mobile-open');
+                
+                // Change icon based on state
+                const icon = this.querySelector('i');
+                if (sidebar.classList.contains('mobile-open')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 800) {
+                    if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                        sidebar.classList.remove('mobile-open');
+                        menuToggle.querySelector('i').className = 'fas fa-bars';
+                    }
+                }
+            });
+        }
+
+        // Navigation setup
+        function setupNavigation() {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const modules = document.querySelectorAll('.module-page');
+
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get module to show
+                    const moduleId = this.getAttribute('data-module');
+                    
+                    // Hide all modules
+                    modules.forEach(m => m.classList.remove('active'));
+                    
+                    // Show selected module
+                    const selectedModule = document.getElementById(moduleId + '-module');
+                    if (selectedModule) {
+                        selectedModule.classList.add('active');
+                    }
+                    
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth <= 800) {
+                        document.getElementById('sidebar').classList.remove('mobile-open');
+                        document.getElementById('menuToggle').querySelector('i').className = 'fas fa-bars';
+                    }
+                });
+            });
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
